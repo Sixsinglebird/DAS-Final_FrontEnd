@@ -10,7 +10,11 @@ const Input = () => {
         setValueList([...valueList, value]);
     }
 
-    const postBT = async () => {
+    const clearList = () => {
+        setValueList([]);
+    }
+    
+    const postTree = async () => {
         let tmp = [];
         valueList.forEach((value) => {
             tmp.push(value)
@@ -23,7 +27,6 @@ const Input = () => {
             },
             body: JSON.stringify(tmp)
         }).then((response) => {
-            console.log(response)
             return response;
         })
     }
@@ -36,7 +39,6 @@ const Input = () => {
             },
             body: JSON.stringify(tree)
         }).then((response) => {
-            console.log(response)
             return response;
         })
     }
@@ -64,6 +66,7 @@ const Input = () => {
 
     useEffect(() => {
         setTreeData(traverseTree(tree));
+        getTree();
     }, [tree]);
 
 
@@ -85,7 +88,7 @@ const Input = () => {
             <form className={"row"}>
                 <button onClick={(event) => {
                     event.preventDefault();
-                    postBT();
+                    postTree();
                     getTree();
                 }}>Binary Tree</button>
 
@@ -94,6 +97,11 @@ const Input = () => {
                     postSortedTree();
                     getTree();
                 }}>Sorted tree</button>
+
+                <button onClick={(event) => {
+                    event.preventDefault();
+                    clearList();
+                }}>Clear list</button>
             </form>
 
             <div className={"row"}>
