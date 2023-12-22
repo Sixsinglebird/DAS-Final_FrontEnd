@@ -4,13 +4,13 @@ const Input = () => {
     const [value, setValue] = useState();
     const [valueList, setValueList] = useState([]);
     const [tree, setTree] = useState([]);
-    const [treeString, setTreeString] = useState("");
+    const [traverse,setTraverse] = useState(false);
 
     const addValue = (value) => {
         setValueList([...valueList, value]);
     }
 
-    const postList = async () => {
+    const postBT = async () => {
         let tmp = [];
         valueList.forEach((value) => {
             tmp.push(value)
@@ -22,6 +22,19 @@ const Input = () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(tmp)
+        }).then((response) => {
+            console.log(response)
+            return response;
+        })
+    }
+
+    const postSortedTree = async () => {
+        await fetch("http://localhost:8080/orderTree", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(tree)
         }).then((response) => {
             console.log(response)
             return response;
@@ -49,25 +62,38 @@ const Input = () => {
         ];
     }
 
-    useEffect(() => {
-        setTreeString(traverseTree(tree));
-    }, [tree]);
+
+
 
     return (
         <div className={"input"}>
-            <div className={"row"}>
+            <form className={"row"} onSubmit={(event) => {
+                event.preventDefault();
+                addValue(value);
+            }}>
                 <input type={"number"} onChange={(event) => setValue(event.target.value)}/>
-                <button onClick={() => addValue(value) }>Enter Number</button>
-            </div>
+                <button type={"submit"}>Enter Number</button>
+            </form>
+
             <div className={"row"}>
                 {valueList.map((value, index) => <p key={index}>{value}</p>)}
             </div>
+
+            <form className={"row"}>
+                <button onClick={(event) => {
+                    event.preventDefault();
+                    postBT();
+                    setTraverse(true)
+                }}>Binary Tree</button>
+                <button onClick={(event) => {
+                    event.preventDefault();
+                    postSortedTree();
+                    setTraverse(true)
+                }}>Sorted tree</button>
+            </form>
+
             <div className={"row"}>
-                <button onClick={() => postList()}>Submit List</button>
-                <button onClick={() => getTree()}>View Tree</button>
-            </div>
-            <div className={"row"}>
-                {treeString}
+                {traverse && traverseTree(tree)}
             </div>
         </div>
     );
