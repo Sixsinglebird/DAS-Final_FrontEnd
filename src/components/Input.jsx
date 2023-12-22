@@ -4,7 +4,7 @@ const Input = () => {
     const [value, setValue] = useState();
     const [valueList, setValueList] = useState([]);
     const [tree, setTree] = useState([]);
-    const [traverse,setTraverse] = useState(false);
+    const [treeData, setTreeData] = useState(<></>);
 
     const addValue = (value) => {
         setValueList([...valueList, value]);
@@ -62,6 +62,9 @@ const Input = () => {
         ];
     }
 
+    useEffect(() => {
+        setTreeData(traverseTree(tree));
+    }, [tree]);
 
 
 
@@ -83,17 +86,18 @@ const Input = () => {
                 <button onClick={(event) => {
                     event.preventDefault();
                     postBT();
-                    setTraverse(true)
+                    getTree();
                 }}>Binary Tree</button>
+
                 <button onClick={(event) => {
                     event.preventDefault();
                     postSortedTree();
-                    setTraverse(true)
+                    getTree();
                 }}>Sorted tree</button>
             </form>
 
             <div className={"row"}>
-                {traverse && traverseTree(tree)}
+                {treeData}
             </div>
         </div>
     );
